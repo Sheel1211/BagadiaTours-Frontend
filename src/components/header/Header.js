@@ -239,7 +239,7 @@ const Header = () => {
             })}
           </ul>
 
-          <div className="  -right d-lg-none d-block">
+          {/* <div className="  -right d-lg-none d-block">
             <Link href="/login">
               <button
                 type="button"
@@ -262,7 +262,7 @@ const Header = () => {
                 LOGIN
               </button>
             </Link>
-          </div>
+          </div> */}
           <div className="hotline-area d-lg-none d-flex">
             <div className="icon">
               <svg
