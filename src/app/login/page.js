@@ -100,7 +100,7 @@ const page = () => {
       <Header />
       <Breadcrumb pagename="Login" pagetitle="Login" />
       {/* {children} */}
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       <div
         className="login-modal"
         id="user-login"

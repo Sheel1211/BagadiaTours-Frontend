@@ -365,11 +365,11 @@ const Page = () => {
             <div className="dashboard-footer">
               <div className="copyright-area">
                 <p>
-                  Copyright 2023 <a href="#">Triprex</a> | Design By{" "}
-                  <a href="#">Egens Lab</a>
+                  Copyright 2024 <a href="#">Bagadia Tours and Travels</a> | Design By{" "}
+                  <a href="https://www.foremostinfosystem.com/">Foremost Infosystem</a>
                 </p>
               </div>
-              <ul className="footer-menu-list">
+              {/* <ul className="footer-menu-list">
                 <li>
                   <a href="#">About Us</a>
                 </li>
@@ -379,7 +379,7 @@ const Page = () => {
                 <li>
                   <a href="#">Terms &amp; Conditions</a>
                 </li>
-              </ul>
+              </ul> */}
             </div>
           </div>
         </>

@@ -11,7 +11,7 @@ const Footer = ({ style }) => {
               <div className="footer-widget">
                 <div className="footer-logo">
                   <Link href="/">
-                    <img src="/assets/img/logo.jpeg" alt="" />
+                    <img src="/assets/img/logo.png" alt="" />
                   </Link>
                 </div>
                 <h3>
@@ -151,12 +151,12 @@ const Footer = ({ style }) => {
             <div className="col-lg-12 d-flex flex-md-row flex-column align-items-center justify-content-md-between justify-content-center flex-wrap gap-3">
               <ul className="social-list">
                 <li>
-                  <a href="https://www.facebook.com/">
+                  {/* <a href="https://www.facebook.com/">
                     <i className="bx bxl-facebook" />
-                  </a>
+                  </a> */}
                 </li>
                 <li>
-                  <a href="https://twitter.com/">
+                  {/* <a href="https://twitter.com/">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width={10}
@@ -167,17 +167,17 @@ const Footer = ({ style }) => {
                     >
                       <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865l8.875 11.633Z" />
                     </svg>
-                  </a>
+                  </a> */}
                 </li>
                 <li>
-                  <a href="https://www.pinterest.com/">
+                  {/* <a href="https://www.pinterest.com/">
                     <i className="bx bxl-pinterest-alt" />
-                  </a>
+                  </a> */}
                 </li>
                 <li>
-                  <a href="https://www.instagram.com/">
+                  {/* <a href="https://www.instagram.com/">
                     <i className="bx bxl-instagram" />
-                  </a>
+                  </a> */}
                 </li>
               </ul>
               <p>

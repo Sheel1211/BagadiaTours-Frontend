@@ -7,7 +7,7 @@ export const metadata = {
   description:
     "To inspire and empower travelers to explore the world with confidence, providing exceptional service, unforgettable experiences, and fostering a deep appreciation for diverse cultures and destinations.",
   icons: {
-    icon: "/assets/img/sm-logo.png",
+    icon: "/assets/img/logo.jpeg",
   },
 };
 const layout = ({children}) => {

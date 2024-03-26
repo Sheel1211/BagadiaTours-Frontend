@@ -15,6 +15,7 @@ const page = () => {
   const [price, setPrice] = useState("");
   const [country, setCountry] = useState("");
   const [transportMode, setTransportMode] = useState("");
+  const [tourType, setTourType] = useState("");
 
   const [images, setImages] = useState([]);
   const [numPlaces, setNumPlaces] = useState(0);
@@ -30,28 +31,44 @@ const page = () => {
   const [excluded, setExcluded] = useState("");
 
   const [numStops, setNumStops] = useState(0);
+  const [returnNumStops, setReturnNumStops] = useState(0);
 
   const handleNumStopsChange = (e) => {
     const stops = parseInt(e.target.value);
     setNumStops(stops);
   };
 
+  const handleReturnNumStopsChange = (e) => {
+    const stops = parseInt(e.target.value);
+    setReturnNumStops(stops);
+  };
+
   const [modeDetails, setModeDetails] = useState(() => {
-    
     const initialDetails = Array.from({ length: numStops + 1 }, () => ({
       name: "",
       number: "",
       from: "",
-      fromAirportCode: "",
       departureTime: "",
       to: "",
-      toAirportCode: "",
       arrivalTime: "",
     }));
     return initialDetails;
   });
+
+  const [returnModeDetails, setReturnModeDetails] = useState(() => {
+    const initialDetails = Array.from({ length: numStops + 1 }, () => ({
+      name: "",
+      number: "",
+      from: "",
+      departureTime: "",
+      to: "",
+      arrivalTime: "",
+    }));
+    return initialDetails;
+  });
+
   const handleModeDetailsChange = (index, field, value) => {
-    setModeDetails(prevModeDetails => {
+    setModeDetails((prevModeDetails) => {
       // Ensure the index is within bounds or equal to the length of the array
       if (index >= 0 && index <= prevModeDetails.length) {
         const updatedDetails = [...prevModeDetails];
@@ -61,10 +78,8 @@ const page = () => {
             name: "",
             number: "",
             from: "",
-            fromAirportCode: "",
             departureTime: "",
             to: "",
-            toAirportCode: "",
             arrivalTime: "",
           });
         }
@@ -76,8 +91,30 @@ const page = () => {
       }
     });
   };
-  
-  
+  const handleReturnModeDetailsChange = (index, field, value) => {
+    setReturnModeDetails((prevModeDetails) => {
+      // Ensure the index is within bounds or equal to the length of the array
+      if (index >= 0 && index <= prevModeDetails.length) {
+        const updatedDetails = [...prevModeDetails];
+        // If index equals the length, it means adding a new element
+        if (index === prevModeDetails.length) {
+          updatedDetails.push({
+            name: "",
+            number: "",
+            from: "",
+            departureTime: "",
+            to: "",
+            arrivalTime: "",
+          });
+        }
+        updatedDetails[index][field] = value;
+        return updatedDetails;
+      } else {
+        console.error(`Index ${index} is out of bounds.`);
+        return prevModeDetails;
+      }
+    });
+  };
 
   const router = useRouter();
 
@@ -153,7 +190,9 @@ const page = () => {
       formData.append("excluded", excluded);
       formData.append("country", country);
       formData.append("transportMode", transportMode);
-      formData.append('modeDetails', JSON.stringify(modeDetails));
+      formData.append("modeDetails", JSON.stringify(modeDetails));
+      formData.append("returnModeDetails", JSON.stringify(returnModeDetails));
+      formData.append("tourType", tourType);
       //   for (var key of formData.entries()) {
       //     console.log(key[0] + ', ' + key[1]);
       // }
@@ -191,6 +230,7 @@ const page = () => {
           setTourDescription("");
           setIncluded("");
           setExcluded("");
+          setTourType("");
         })
         .catch((error) => {
           console.log(error);
@@ -222,6 +262,7 @@ const page = () => {
           setTourDescription("");
           setIncluded("");
           setExcluded("");
+          setTourType("");
         });
     } catch (e) {
       // toast.error(e.message, {
@@ -252,6 +293,7 @@ const page = () => {
       setTourDescription("");
       setIncluded("");
       setExcluded("");
+      setTourType("");
     }
   };
   return (
@@ -320,7 +362,10 @@ const page = () => {
                     className="form-inner mb-20"
                     style={{ width: "40vw", margin: "1vmax auto" }}
                   >
-                    <label className="custom-file-input">
+                    <label
+                      className="custom-file-input"
+                      style={{ color: "#fff" }}
+                    >
                       Upload Images
                       <input
                         type="file"
@@ -388,6 +433,23 @@ const page = () => {
                     />
                   </div>
 
+                  <div
+                    className="form-inner mb-20"
+                    style={{ width: "40vw", margin: "1vmax auto" }}
+                  >
+                    <label htmlFor="tourType" style={{ fontSize: "1vmax" }}>
+                      Tour Type
+                    </label>
+                    <select
+                      id="tourType"
+                      value={tourType}
+                      onChange={(e) => setTourType(e.target.value)}
+                    >
+                      <option value="">Select Tour Type</option>
+                      <option value="Group Tour">Group Tour</option>
+                      <option value="Private Van Tour">Private Van Tour</option>
+                    </select>
+                  </div>
                   <div
                     className="form-inner mb-20"
                     style={{ width: "40vw", margin: "1vmax auto" }}
@@ -532,7 +594,9 @@ const page = () => {
                       display: "flex",
                     }}
                   >
-                    <label htmlFor="numStops">Number of Stops:</label>
+                    <label htmlFor="numStops">
+                      Number of Stops For Departure:
+                    </label>
                     <input
                       type="number"
                       id="numStops"
@@ -551,128 +615,235 @@ const page = () => {
                     >
                       {[...Array(numStops + 1)].map((_, index) => (
                         <div
-                        className="form-inner mb-20"
-                        style={{
-                          width: "40vw",
-                          margin: "1vmax auto",
-                          display: "flex",
-                        }}
-                      >
-                        <div key={index} style={{ marginRight: "1rem" }}>
-                          <h4>Travel {index + 1} Details:</h4>
-                          <div className="form-inner mb-20">
-                            <input
-                              type="text"
-                              placeholder={`Name`}
-                              value={modeDetails[index]?.name || ""}
-                              onChange={(e) =>
-                                handleModeDetailsChange(
-                                  index,
-                                  "name",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                          <div className="form-inner mb-20">
-                            <input
-                              type="text"
-                              placeholder={`Number`}
-                              value={modeDetails[index]?.number || ""}
-                              onChange={(e) =>
-                                handleModeDetailsChange(
-                                  index,
-                                  "number",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                          <div className="form-inner mb-20">
-                            <input
-                              type="text"
-                              placeholder={`Departure Place`}
-                              value={modeDetails[index]?.from || ""}
-                              onChange={(e) =>
-                                handleModeDetailsChange(
-                                  index,
-                                  "from",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                          <div className="form-inner mb-20">
-                            <input
-                              type="text"
-                              placeholder={`Departure Airport Code`}
-                              value={modeDetails[index]?.fromAirportCode || ""}
-                              onChange={(e) =>
-                                handleModeDetailsChange(
-                                  index,
-                                  "fromAirportCode",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                          <div className="form-inner mb-20">
-                            <input
-                              type="text"
-                              placeholder={`Departure Time`}
-                              value={modeDetails[index]?.departureTime || ""}
-                              onChange={(e) =>
-                                handleModeDetailsChange(
-                                  index,
-                                  "departureTime",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                          <div className="form-inner mb-20">
-                            <input
-                              type="text"
-                              placeholder={`Arrival Place`}
-                              value={modeDetails[index]?.to || ""}
-                              onChange={(e) =>
-                                handleModeDetailsChange(
-                                  index,
-                                  "to",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                          <div className="form-inner mb-20">
-                            <input
-                              type="text"
-                              placeholder={`Arrival Airport Code`}
-                              value={modeDetails[index]?.toAirportCode || ""}
-                              onChange={(e) =>
-                                handleModeDetailsChange(
-                                  index,
-                                  "toAirportCode",
-                                  e.target.value
-                                )
-                              }
-                            />
-                          </div>
-                          <div className="form-inner mb-20">
-                            <input
-                              type="text"
-                              placeholder={`Arrival Time`}
-                              value={modeDetails[index]?.arrivalTime || ""}
-                              onChange={(e) =>
-                                handleModeDetailsChange(
-                                  index,
-                                  "arrivalTime",
-                                  e.target.value
-                                )
-                              }
-                            />
+                          className="form-inner mb-20"
+                          style={{
+                            width: "40vw",
+                            margin: "1vmax auto",
+                            display: "flex",
+                          }}
+                        >
+                          <div key={index} style={{ marginRight: "1rem" }}>
+                            <h4>Travel {index + 1} Details:</h4>
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} Name`}
+                                value={modeDetails[index]?.name || ""}
+                                onChange={(e) =>
+                                  handleModeDetailsChange(
+                                    index,
+                                    "name",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} Number`}
+                                value={modeDetails[index]?.number || ""}
+                                onChange={(e) =>
+                                  handleModeDetailsChange(
+                                    index,
+                                    "number",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} From`}
+                                value={modeDetails[index]?.from || ""}
+                                onChange={(e) =>
+                                  handleModeDetailsChange(
+                                    index,
+                                    "from",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} Departure Time`}
+                                value={modeDetails[index]?.departureTime || ""}
+                                onChange={(e) =>
+                                  handleModeDetailsChange(
+                                    index,
+                                    "departureTime",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} To`}
+                                value={modeDetails[index]?.to || ""}
+                                onChange={(e) =>
+                                  handleModeDetailsChange(
+                                    index,
+                                    "to",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} Arrival Time`}
+                                value={modeDetails[index]?.arrivalTime || ""}
+                                onChange={(e) =>
+                                  handleModeDetailsChange(
+                                    index,
+                                    "arrivalTime",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
                           </div>
                         </div>
+                      ))}
+                    </div>
+                  )}
+                  <div
+                    className="form-inner mb-20"
+                    style={{
+                      width: "40vw",
+                      margin: "1vmax auto",
+                      display: "flex",
+                    }}
+                  >
+                    <label htmlFor="numStops">
+                      Number of Stops For Return:
+                    </label>
+                    <input
+                      type="number"
+                      id="numStops"
+                      value={returnNumStops}
+                      onChange={handleReturnNumStopsChange}
+                    />
+                  </div>
+                  {returnNumStops >= 0 && (
+                    <div
+                      className="form-inner mb-20"
+                      style={{
+                        width: "40vw",
+                        margin: "1vmax auto",
+                        display: "flex",
+                      }}
+                    >
+                      {[...Array(returnNumStops + 1)].map((_, index) => (
+                        <div
+                          className="form-inner mb-20"
+                          style={{
+                            width: "40vw",
+                            margin: "1vmax auto",
+                            display: "flex",
+                          }}
+                        >
+                          <div key={index} style={{ marginRight: "1rem" }}>
+                            <h4>Travel {index + 1} Details:</h4>
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} Name`}
+                                value={returnModeDetails[index]?.name || ""}
+                                onChange={(e) =>
+                                  handleReturnModeDetailsChange(
+                                    index,
+                                    "name",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} Number`}
+                                value={returnModeDetails[index]?.number || ""}
+                                onChange={(e) =>
+                                  handleReturnModeDetailsChange(
+                                    index,
+                                    "number",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} From`}
+                                value={returnModeDetails[index]?.from || ""}
+                                onChange={(e) =>
+                                  handleReturnModeDetailsChange(
+                                    index,
+                                    "from",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} Departure Time`}
+                                value={
+                                  returnModeDetails[index]?.departureTime || ""
+                                }
+                                onChange={(e) =>
+                                  handleReturnModeDetailsChange(
+                                    index,
+                                    "departureTime",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} To`}
+                                value={returnModeDetails[index]?.to || ""}
+                                onChange={(e) =>
+                                  handleReturnModeDetailsChange(
+                                    index,
+                                    "to",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+
+                            <div className="form-inner mb-20">
+                              <input
+                                type="text"
+                                placeholder={`${transportMode} Arrival Time`}
+                                value={
+                                  returnModeDetails[index]?.arrivalTime || ""
+                                }
+                                onChange={(e) =>
+                                  handleReturnModeDetailsChange(
+                                    index,
+                                    "arrivalTime",
+                                    e.target.value
+                                  )
+                                }
+                              />
+                            </div>
+                          </div>
                         </div>
                       ))}
                     </div>

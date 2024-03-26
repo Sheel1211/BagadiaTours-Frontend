@@ -114,7 +114,7 @@ const Page = () => {
   }, []);
   return (
     <>
-      <ToastContainer />
+      {/* <ToastContainer /> */}
       {isLoading ? (
         <Loader />
       ) : (
@@ -246,10 +246,12 @@ const Page = () => {
               <div className="row g-xl-4 gy-5">
                 <div className="col-xl-8">
                   <h2>{data && data.title}</h2>
+                  <h4>Tour Type:{data && data.tourType}</h4>
                   <div className="tour-price">
                     <h3>₹ {data && data.price}/</h3>
                     <span>per person</span>
                   </div>
+
                   <ul className="tour-info-metalist">
                     <li>
                       <svg
@@ -290,7 +292,7 @@ const Page = () => {
                     </li>
                   </ul>
                   <p>{data && data.tourDescription}</p>
-                  <h4>Included and Excluded</h4>
+                  <h4>Included</h4>
                   <div className="includ-and-exclud-area mb-20">
                     <ul>
                       {data &&
@@ -303,6 +305,31 @@ const Page = () => {
                             )
                         )}
                     </ul>
+                    {/* <ul className="exclud">
+                      {data &&
+                        data.excluded.split("\n").map(
+                          (line, index) =>
+                            line.trim() !== "" && (
+                              <li key={index}>
+                                <i className="bi bi-x-lg" /> {line}
+                              </li>
+                            )
+                        )}
+                    </ul> */}
+                  </div>
+                  <h4>Excluded</h4>
+                  <div className="includ-and-exclud-area mb-20">
+                    {/* <ul>
+                      {data &&
+                        data.included.split("\n").map(
+                          (line, index) =>
+                            line.trim() !== "" && (
+                              <li key={index}>
+                                <i className="bi bi-check-lg" /> {line}
+                              </li>
+                            )
+                        )}
+                    </ul> */}
                     <ul className="exclud">
                       {data &&
                         data.excluded.split("\n").map(
@@ -402,14 +429,14 @@ const Page = () => {
                               style={{
                                 position: "absolute",
                                 right: "15px",
-                                top: "10px",
+                                top: "15px",
                                 fontWeight: "400",
                                 lineHeight: "18px",
                                 textAlign: "center",
-                                fontSize: "12px",
+                                fontSize: "17px",
                               }}
                             >
-                              <div>Number</div>
+                              {/* <div>Number</div> */}
                               <div>{detail.number}</div>
                             </div>
                           </header>
@@ -437,13 +464,13 @@ const Page = () => {
                                 className="airport-name"
                                 style={{
                                   color: "#29A8EB",
-                                  fontSize: "12px",
+                                  fontSize: "22px",
                                   fontWeight: "400",
                                 }}
                               >
                                 {detail.from}
                               </div>
-                              <div
+                              {/* <div
                                 className="airport-code"
                                 style={{
                                   fontSize: "32px",
@@ -452,7 +479,7 @@ const Page = () => {
                                 }}
                               >
                                 {detail.fromAirportCode}
-                              </div>
+                              </div> */}
                               <div
                                 className="dep-arr-label"
                                 style={{
@@ -465,7 +492,7 @@ const Page = () => {
                               </div>
                               <div
                                 className="time"
-                                style={{ fontSize: "10px", color: "#9299A0" }}
+                                style={{ fontSize: "17px", color: "#fff" }}
                               >
                                 {detail.departureTime}
                               </div>
@@ -483,13 +510,13 @@ const Page = () => {
                                 className="airport-name"
                                 style={{
                                   color: "#29A8EB",
-                                  fontSize: "12px",
+                                  fontSize: "22px",
                                   fontWeight: "400",
                                 }}
                               >
                                 {detail.to}
                               </div>
-                              <div
+                              {/* <div
                                 className="airport-code"
                                 style={{
                                   fontSize: "32px",
@@ -498,7 +525,7 @@ const Page = () => {
                                 }}
                               >
                                 {detail.toAirportCode}
-                              </div>
+                              </div> */}
                               <div
                                 className="dep-arr-label"
                                 style={{
@@ -511,7 +538,174 @@ const Page = () => {
                               </div>
                               <div
                                 className="time"
-                                style={{ fontSize: "10px", color: "#9299A0" }}
+                                style={{ fontSize: "17px", color: "#fff" }}
+                              >
+                                {detail.arrivalTime}
+                              </div>
+                            </div>
+                          </section>
+                        </div>
+                      </div>
+                    ))}
+
+                  <h4>Return {!isLoading && data && data.transportMode} Details:</h4>
+                  {!isLoading &&
+                    data &&
+                    data.returnModeDetails.map((detail, index) => (
+                      <div
+                        key={index}
+                        style={{
+                          width: "100%",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <div
+                          className="ticket inverse"
+                          style={{
+                            display: "inline-block",
+                            width: "350px",
+                            margin: "20px",
+                            backgroundColor: "#273138",
+                            borderRadius: "10px",
+                            color: "#fff",
+                            fontFamily: "Helvetica Neue",
+                            fontWeight: "300",
+                            letterSpacing: "1px",
+                            boxShadow: "0 0 10px rgba(0,0,0,0.5)",
+                          }}
+                        >
+                          <header
+                            style={{
+                              position: "relative",
+                              height: "60px",
+                              backgroundColor: "#1B252E",
+                              padding: "10px",
+                              borderRadius: "10px",
+                            }}
+                          >
+                            <div
+                              className="company-name"
+                              style={{ lineHeight: "35px", textAlign: "left" }}
+                            >
+                              {detail.name}
+                            </div>
+                            <div
+                              className="gate"
+                              style={{
+                                position: "absolute",
+                                right: "15px",
+                                top: "15px",
+                                fontWeight: "400",
+                                lineHeight: "18px",
+                                textAlign: "center",
+                                fontSize: "17px",
+                              }}
+                            >
+                              {/* <div>Number</div> */}
+                              <div>{detail.number}</div>
+                            </div>
+                          </header>
+                          <section
+                            className="airports"
+                            style={{
+                              padding: "5px 10px 10px 10px",
+                              height: "150px",
+                              textAlign: "center",
+                              display: "flex",
+                              justifyContent: "space-between",
+                              position: "relative",
+                            }}
+                          >
+                            <div
+                              className="airport"
+                              style={{
+                                position: "relative",
+                                margin: "10px",
+                                textAlign: "center",
+                                display: "inline-block",
+                              }}
+                            >
+                              <div
+                                className="airport-name"
+                                style={{
+                                  color: "#29A8EB",
+                                  fontSize: "22px",
+                                  fontWeight: "400",
+                                }}
+                              >
+                                {detail.from}
+                              </div>
+                              {/* <div
+                                className="airport-code"
+                                style={{
+                                  fontSize: "32px",
+                                  fontWeight: "400",
+                                  margin: "5px 0",
+                                }}
+                              >
+                                {detail.fromAirportCode}
+                              </div> */}
+                              <div
+                                className="dep-arr-label"
+                                style={{
+                                  color: "#9299A0",
+                                  fontSize: "12px",
+                                  fontWeight: "500",
+                                }}
+                              >
+                                Departing
+                              </div>
+                              <div
+                                className="time"
+                                style={{ fontSize: "17px", color: "#fff" }}
+                              >
+                                {detail.departureTime}
+                              </div>
+                            </div>
+                            <div
+                              className="airport"
+                              style={{
+                                position: "relative",
+                                margin: "10px",
+                                textAlign: "center",
+                                display: "inline-block",
+                              }}
+                            >
+                              <div
+                                className="airport-name"
+                                style={{
+                                  color: "#29A8EB",
+                                  fontSize: "22px",
+                                  fontWeight: "400",
+                                }}
+                              >
+                                {detail.to}
+                              </div>
+                              {/* <div
+                                className="airport-code"
+                                style={{
+                                  fontSize: "32px",
+                                  fontWeight: "400",
+                                  margin: "5px 0",
+                                }}
+                              >
+                                {detail.toAirportCode}
+                              </div> */}
+                              <div
+                                className="dep-arr-label"
+                                style={{
+                                  color: "#9299A0",
+                                  fontSize: "12px",
+                                  fontWeight: "500",
+                                }}
+                              >
+                                Arriving
+                              </div>
+                              <div
+                                className="time"
+                                style={{ fontSize: "17px", color: "#fff" }}
                               >
                                 {detail.arrivalTime}
                               </div>
@@ -1392,7 +1586,7 @@ const Page = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                               />
                             </div>
-                            
+
                             <div className="form-inner mb-20">
                               <label>Travel Date:</label>
 
@@ -1458,9 +1652,7 @@ const Page = () => {
                                 type="tel"
                                 placeholder="Budget"
                                 value={budget}
-                                onChange={(e) =>
-                                  setBudget(e.target.value)
-                                }
+                                onChange={(e) => setBudget(e.target.value)}
                               />
                             </div>
                             <button

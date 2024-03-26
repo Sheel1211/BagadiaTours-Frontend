@@ -8,12 +8,63 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Loader from "../../app/loading.js";
 import axios from "axios";
+import "react-responsive-modal/styles.css";
+import { Modal } from "react-responsive-modal";
+
+import { toast, ToastContainer } from "react-toastify";
+
 const page = () => {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [sortOrder, setSortOrder] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
   const [originalData, setOriginalData] = useState([]);
+
+  const [open, setOpen] = useState(false);
+
+  const onOpenModal = () => setOpen(true);
+  const onCloseModal = () => setOpen(false);
+  const [fullName, setFullName] = useState("");
+  const [contactNumber, setContactNumber] = useState("");
+  const [tourTitle, setTourTitle] = useState("");
+
+  const handleFormSubmission = async (e) => {
+    e.preventDefault();
+    if (fullName === "" || contactNumber === "") {
+      toast.error("Please fill in all fields.");
+      return; // Exit the function early if any field is empty
+    }
+    try {
+      // Constructing the form data object
+      const formData = {
+        tourTitle,
+        fullName,
+        contactNumber,
+      };
+
+      const response = await axios
+        .post(
+          "http://localhost:4000/api/v1/inquiry/addSmallInquiry",
+          formData,
+          {
+            withCredentials: true,
+          }
+        )
+        .then((response) => {
+          console.log(response);
+          toast.success(response.data.message);
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+
+      setFullName("");
+      setContactNumber("");
+      // console.log("Inquiry submitted successfully!");
+    } catch (error) {
+      // console.error("Error submitting inquiry:", error.message);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,6 +116,44 @@ const page = () => {
         <Loader />
       ) : (
         <>
+          {/* <ToastContainer /> */}
+          <Modal open={open} onClose={onCloseModal} center>
+            <form style={{ width: "20vw" }}>
+              <div className="form-inner mb-20">
+                <input
+                  disabled
+                  type="text"
+                  style={{ fontSize: "1vw" }}
+                  placeholder={tourTitle}
+                />
+              </div>
+              <div className="form-inner mb-20">
+                <input
+                  type="text"
+                  style={{ fontSize: "1vw" }}
+                  placeholder="Full Name"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                />
+              </div>
+              <div className="form-inner mb-20">
+                <input
+                  type="tel"
+                  style={{ fontSize: "1vw" }}
+                  placeholder="Contact Number"
+                  value={contactNumber}
+                  onChange={(e) => setContactNumber(e.target.value)}
+                />
+              </div>
+              <button
+                type="submit"
+                onClick={handleFormSubmission}
+                className="primary-btn1 two"
+              >
+                Send Inquiry
+              </button>
+            </form>
+          </Modal>
           <Header />
           <Breadcrumb pagename="Tour Packages" pagetitle="Tour Packages" />
           <div className="package-grid-with-sidebar-section pt-120 mb-120">
@@ -95,6 +184,17 @@ const page = () => {
                         data.map((item) => (
                           <div className="col-lg-4 col-md-6">
                             <div className="package-card">
+                              <div className="package-card-content">
+                                <div className="card-content-top">
+                                  <h5>
+                                    <Link
+                                      href={`/package/package-details/${item._id}`}
+                                    >
+                                      {item.title && item.title}
+                                    </Link>
+                                  </h5>
+                                </div>
+                              </div>
                               <div className="package-card-img-wrap">
                                 <Link
                                   href={`/package/package-details/${item._id}`}
@@ -139,7 +239,8 @@ const page = () => {
                                     <Link
                                       href={`/package/package-details/${item._id}`}
                                     >
-                                      {item.title && item.title}
+                                      Tour Type:{" "}
+                                      {item.tourType && item.tourType}
                                     </Link>
                                   </h5>
                                   <div className="location-area">
@@ -164,9 +265,13 @@ const page = () => {
                                       {item.transportMode && item.transportMode}
                                     </span>
                                   </div>
-                                  <Link
-                                    href={`/package/package-details/${item._id}`}
+                                  <button
+                                    // href={`/package/package-details/${item._id}`}
                                     className="primary-btn2"
+                                    onClick={(e) => {
+                                      setTourTitle(item.title);
+                                      onOpenModal();
+                                    }}
                                   >
                                     Inquire
                                     <svg
@@ -187,7 +292,7 @@ const page = () => {
                                         fill="white"
                                       ></path>{" "}
                                     </svg>
-                                  </Link>
+                                  </button>
                                 </div>
                               </div>
                             </div>
